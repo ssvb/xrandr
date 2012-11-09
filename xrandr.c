@@ -99,7 +99,7 @@ usage(void)
 {
     printf("usage: %s [options]\n", program_name);
     printf("  where options are:\n");
-    printf("  -display <display> or -d <display>\n");
+    printf("  --display <display> or -d <display>\n");
     printf("  --help\n");
     printf("  -o <normal,inverted,left,right,0,1,2,3>\n");
     printf("            or --orientation <normal,inverted,left,right,0,1,2,3>\n");
@@ -2510,7 +2510,8 @@ main (int argc, char **argv)
 
     program_name = argv[0];
     for (i = 1; i < argc; i++) {
-	if (!strcmp ("-display", argv[i]) || !strcmp ("-d", argv[i])) {
+	if (!strcmp ("-display", argv[i]) || !strcmp ("--display", argv[i]) ||
+	    !strcmp ("-d", argv[i])) {
 	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    display_name = argv[i];
 	    continue;
