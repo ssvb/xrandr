@@ -3249,6 +3249,9 @@ main (int argc, char **argv)
 	    Rotation	    rotations = output_rotations (output);
 
 	    printf ("%s %s", output_info->name, connection[output_info->connection]);
+	    if (output->primary) {
+		printf(" primary");
+	    }
 	    if (mode)
 	    {
 		if (crtc_info) {
