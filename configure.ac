@@ -24,7 +24,6 @@ AC_PREREQ([2.60])
 AC_INIT([xrandr], [1.3.5],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], [xrandr])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
-AM_MAINTAINER_MODE
 
 # Require X.Org macros 1.8 or later for MAN_SUBSTS set by XORG_MANPAGE_SECTIONS
 m4_ifndef([XORG_MACROS_VERSION],
