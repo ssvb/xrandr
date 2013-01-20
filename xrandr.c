@@ -1090,12 +1090,12 @@ set_output_info (output_t *output, RROutput xid, XRROutputInfo *output_info)
 	if (!output->crtc_info)
 	{
 	    if (output->crtc.kind & name_xid)
-		fatal ("cannot find crtc 0x%x\n", output->crtc.xid);
+		fatal ("cannot find crtc 0x%lx\n", output->crtc.xid);
 	    if (output->crtc.kind & name_index)
 		fatal ("cannot find crtc %d\n", output->crtc.index);
 	}
 	if (!output_can_use_crtc (output, output->crtc_info))
-	    fatal ("output %s cannot use crtc 0x%x\n", output->output.string,
+	    fatal ("output %s cannot use crtc 0x%lx\n", output->output.string,
 		   output->crtc_info->crtc.xid);
     }
 
@@ -1116,7 +1116,7 @@ set_output_info (output_t *output, RROutput xid, XRROutputInfo *output_info)
 	{
 	    output->mode_info = find_mode_by_xid (output->mode.xid);
 	    if (!output->mode_info)
-		fatal ("server did not report mode 0x%x for output %s\n",
+		fatal ("server did not report mode 0x%lx for output %s\n",
 		       output->mode.xid, output->output.string);
 	}
 	else
@@ -1137,7 +1137,7 @@ set_output_info (output_t *output, RROutput xid, XRROutputInfo *output_info)
 	    if (output->mode.kind & name_string)
 		fatal ("cannot find mode %s\n", output->mode.string);
 	    if (output->mode.kind & name_xid)
-		fatal ("cannot find mode 0x%x\n", output->mode.xid);
+		fatal ("cannot find mode 0x%lx\n", output->mode.xid);
 	}
 	if (!output_can_use_mode (output, output->mode_info))
 	    fatal ("output %s cannot use mode %s\n", output->output.string,
@@ -1267,7 +1267,7 @@ get_crtcs (void)
 
 	set_name_xid (&crtcs[c].crtc, res->crtcs[c]);
 	set_name_index (&crtcs[c].crtc, c);
-	if (!crtc_info) fatal ("could not get crtc 0x%x information\n", res->crtcs[c]);
+	if (!crtc_info) fatal ("could not get crtc 0x%lx information\n", res->crtcs[c]);
 	crtcs[c].crtc_info = crtc_info;
 	crtcs[c].panning_info = panning_info;
 	if (crtc_info->mode == None)
@@ -1724,7 +1724,7 @@ get_outputs (void)
 	XRROutputInfo	*output_info = XRRGetOutputInfo (dpy, res, res->outputs[o]);
 	output_t	*output;
 	name_t		output_name;
-	if (!output_info) fatal ("could not get output 0x%x information\n", res->outputs[o]);
+	if (!output_info) fatal ("could not get output 0x%lx information\n", res->outputs[o]);
 	set_name_xid (&output_name, res->outputs[o]);
 	set_name_index (&output_name, o);
 	set_name_string (&output_name, output_info->name);
@@ -1812,7 +1812,7 @@ mark_changing_crtcs (void)
 	for (o = 0; o < crtc->crtc_info->noutput; o++)
 	{
 	    output = find_output_by_xid (crtc->crtc_info->outputs[o]);
-	    if (!output) fatal ("cannot find output 0x%x\n",
+	    if (!output) fatal ("cannot find output 0x%lx\n",
 				crtc->crtc_info->outputs[o]);
 	    if (output->changes)
 		crtc->changing = True;
@@ -1903,7 +1903,7 @@ find_crtc_for_output (output_t *output)
 	crtc_t	    *crtc;
 
 	crtc = find_crtc_by_xid (output->output_info->crtcs[c]);
-	if (!crtc) fatal ("cannot find crtc 0x%x\n", output->output_info->crtcs[c]);
+	if (!crtc) fatal ("cannot find crtc 0x%lx\n", output->output_info->crtcs[c]);
 
 	if (check_crtc_for_output (crtc, output))
 	    return crtc;
@@ -2120,7 +2120,7 @@ pick_crtcs_score (output_t *outputs)
 
 	crtc = find_crtc_by_xid (output->output_info->crtcs[c]);
 	if (!crtc)
-	    fatal ("cannot find crtc 0x%x\n", output->output_info->crtcs[c]);
+	    fatal ("cannot find crtc 0x%lx\n", output->output_info->crtcs[c]);
 	
 	/* reset crtc allocation for following outputs */
 	disable_outputs (outputs);
