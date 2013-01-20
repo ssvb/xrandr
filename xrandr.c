@@ -156,7 +156,7 @@ usage(void)
     /*NOTREACHED*/
 }
 
-static void _X_NORETURN
+static void _X_NORETURN _X_ATTRIBUTE_PRINTF(1,2)
 fatal (const char *format, ...)
 {
     va_list ap;
@@ -169,7 +169,7 @@ fatal (const char *format, ...)
     /*NOTREACHED*/
 }
 
-static void
+static void _X_ATTRIBUTE_PRINTF(1,2)
 warning (const char *format, ...)
 {
     va_list ap;
