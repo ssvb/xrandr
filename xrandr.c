@@ -417,7 +417,7 @@ static int	minWidth, maxWidth, minHeight, maxHeight;
 static Bool    	has_1_2 = False;
 static Bool    	has_1_3 = False;
 static Bool    	has_1_4 = False;
-static int      provider_xid, output_source_provider_xid, offload_sink_provider_xid;
+static name_t   provider_name, output_source_provider_name, offload_sink_provider_name;
 
 static int
 mode_height (XRRModeInfo *mode_info, Rotation rotation)
@@ -612,6 +612,17 @@ set_name (name_t *name, char *string, name_kind_t valid)
 	set_name_string (name, string);
     else
 	usage ();
+}
+
+static int
+print_name (const name_t *name)
+{
+    name_kind_t kind = name->kind;
+
+    if ((kind & name_xid))         return printf("XID 0x%x", name->xid);
+    else if ((kind & name_string)) return printf("name %s", name->string);
+    else if ((kind & name_index))  return printf("index %d", name->index);
+    else                           return printf("unknown name");
 }
 
 static void
@@ -1236,7 +1247,10 @@ get_screen (Bool current)
 {
     if (!has_1_2)
         fatal ("Server RandR version before 1.2\n");
-    
+
+    if (res)
+	return;
+
     XRRGetScreenSizeRange (dpy, root, &minWidth, &minHeight,
 			   &maxWidth, &maxHeight);
     
@@ -2381,7 +2395,7 @@ get_providers (void)
     XRRProviderResources *pr;
     int i;
 
-    if (!has_1_4)
+    if (!has_1_4 || providers)
 	return;
 
     pr = XRRGetProviderResources(dpy, root);
@@ -2402,6 +2416,29 @@ get_providers (void)
    }
 
    XRRFreeProviderResources(pr);
+}
+
+static provider_t *
+find_provider (name_t *name)
+{
+    int i;
+
+    for (i = 0; i < num_providers; i++) {
+	provider_t *p = &providers[i];
+	name_kind_t common = name->kind & p->provider.kind;
+
+	if ((common & name_xid) && name->xid == p->provider.xid)
+	    return p;
+	if ((common & name_string) && !strcmp (name->string, p->provider.string))
+	    return p;
+	if ((common & name_index) && name->index == p->provider.index)
+	    return p;
+    }
+
+    printf ("Could not find provider with ");
+    print_name (name);
+    printf ("\n");
+    exit (1);
 }
 
 
@@ -2956,14 +2993,11 @@ main (int argc, char **argv)
 	if (!strcmp("--setprovideroutputsource", argv[i]))
 	{ 
 	    if (++i>=argc) usage ();
-	    provider_xid = check_strtol(argv[i]);
+	    set_name (&provider_name, argv[i], name_string|name_xid|name_index);
 	    if (++i>=argc) 
-		output_source_provider_xid = 0;
+		set_name_xid (&output_source_provider_name, 0);
 	    else
-		output_source_provider_xid = check_strtol(argv[i]);
-
-	    if (provider_xid == 0)
-		usage();
+		set_name (&output_source_provider_name, argv[i], name_string|name_xid|name_index);
 	    action_requested = True;
 	    provsetoutsource = True;
 	    continue;
@@ -2971,14 +3005,11 @@ main (int argc, char **argv)
 	if (!strcmp("--setprovideroffloadsink", argv[i]))
 	{ 
 	    if (++i>=argc) usage ();
-	    provider_xid = check_strtol(argv[i]);
+	    set_name (&provider_name, argv[i], name_string|name_xid|name_index);
 	    if (++i>=argc) 
-		offload_sink_provider_xid = 0;
+		set_name_xid (&offload_sink_provider_name, 0);
 	    else
-		offload_sink_provider_xid = check_strtol(argv[i]);
-
-	    if (provider_xid == 0)
-		usage();
+		set_name (&offload_sink_provider_name, argv[i], name_string|name_xid|name_index);
 	    action_requested = True;
 	    provsetoffsink = True;
 	    continue;
@@ -3162,13 +3193,35 @@ main (int argc, char **argv)
 	    exit (0);
 	}
     }
-    if (has_1_2 && provsetoutsource)
+    if (provsetoutsource)
     {
-      XRRSetProviderOutputSource(dpy, provider_xid, output_source_provider_xid);
+	provider_t *provider, *source;
+
+	if (!has_1_4)
+	    fatal ("--setprovideroutputsource requires RandR 1.4\n");
+
+	get_screen (current);
+	get_providers ();
+
+	provider = find_provider (&provider_name);
+	source = find_provider(&output_source_provider_name);
+
+	XRRSetProviderOutputSource(dpy, provider->provider.xid, source->provider.xid);
     }
-    if (has_1_2 && provsetoffsink)
+    if (provsetoffsink)
     {
-      XRRSetProviderOffloadSink(dpy, provider_xid, offload_sink_provider_xid);
+	provider_t *provider, *sink;
+
+	if (!has_1_4)
+	    fatal ("--setprovideroffloadsink requires RandR 1.4\n");
+
+	get_screen (current);
+	get_providers ();
+
+	provider = find_provider (&provider_name);
+	sink = find_provider(&offload_sink_provider_name);
+
+	XRRSetProviderOffloadSink(dpy, provider->provider.xid, sink->provider.xid);
     }
     if (setit_1_2)
     {
@@ -3584,6 +3637,12 @@ main (int argc, char **argv)
     }
     if (list_providers) {
 	int k;
+
+	if (!has_1_4) {
+	    printf ("RandR 1.4 not supported\n");
+	    exit (0);
+	}
+
 	get_screen (current);
 	get_providers ();
 
@@ -3594,7 +3653,7 @@ main (int argc, char **argv)
 		provider_t *provider = &providers[j];
 		XRRProviderInfo *info = provider->info;
 
-		printf("Provider %d: id: %d cap: 0x%x", j, (int)provider->provider.xid, info->capabilities);
+		printf("Provider %d: id: 0x%x cap: 0x%x", j, (int)provider->provider.xid, info->capabilities);
 		for (k = 0; k < 4; k++)
 			if (info->capabilities & (1 << k))
 				printf(", %s", capability_name(1<<k));
