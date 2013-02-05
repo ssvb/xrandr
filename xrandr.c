@@ -2,6 +2,7 @@
  * Copyright © 2001 Keith Packard, member of The XFree86 Project, Inc.
  * Copyright © 2002 Hewlett Packard Company, Inc.
  * Copyright © 2006 Intel Corporation
+ * Copyright © 2013 NVIDIA Corporation
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -49,7 +50,6 @@ static int	screen = -1;
 static Bool	verbose = False;
 static Bool	automatic = False;
 static Bool	properties = False;
-static Bool	providers = False;
 static Bool	grab_server = True;
 static Bool	no_primary = False;
 
@@ -289,6 +289,7 @@ typedef struct _output	output_t;
 typedef struct _transform transform_t;
 typedef struct _umode	umode_t;
 typedef struct _output_prop output_prop_t;
+typedef struct _provider provider_t;
 
 struct _transform {
     XTransform	    transform;
@@ -377,6 +378,11 @@ struct _umode {
     name_t	    name;
 };
 
+struct _provider {
+    name_t		provider;
+    XRRProviderInfo	*info;
+};
+
 static const char *connection[3] = {
     "connected",
     "disconnected",
@@ -398,8 +404,9 @@ static const char *connection[3] = {
 static output_t	*outputs = NULL;
 static output_t	**outputs_tail = &outputs;
 static crtc_t	*crtcs;
+static provider_t	*providers;
 static umode_t	*umodes;
-static int	num_crtcs;
+static int	num_crtcs, num_providers;
 static XRRScreenResources  *res;
 static int	fb_width = 0, fb_height = 0;
 static int	fb_width_mm = 0, fb_height_mm = 0;
@@ -409,6 +416,7 @@ static Bool	dryrun = False;
 static int	minWidth, maxWidth, minHeight, maxHeight;
 static Bool    	has_1_2 = False;
 static Bool    	has_1_3 = False;
+static Bool    	has_1_4 = False;
 static int      provider_xid, output_source_provider_xid, offload_sink_provider_xid;
 
 static int
@@ -2367,6 +2375,34 @@ print_output_property_value(Bool is_edid,
     printf ("?");
 }
 
+static void
+get_providers (void)
+{
+    XRRProviderResources *pr;
+    int i;
+
+    if (!has_1_4)
+	return;
+
+    pr = XRRGetProviderResources(dpy, root);
+    num_providers = pr->nproviders;
+    providers = calloc (num_providers, sizeof (provider_t));
+    if (!providers)
+	fatal ("out of memory\n");
+
+    for (i = 0; i < num_providers; i++) {
+	provider_t *provider = &providers[i];
+	name_t *name = &provider->provider;
+	XRRProviderInfo *info = XRRGetProviderInfo(dpy, res, pr->providers[i]);
+
+	provider->info = info;
+	set_name_xid (name, pr->providers[i]);
+	set_name_index (name, i);
+	set_name_string (name, info->name);
+   }
+
+   XRRFreeProviderResources(pr);
+}
 
 
 int
@@ -2404,6 +2440,7 @@ main (int argc, char **argv)
     Bool	modeit = False;
     Bool	propit = False;
     Bool	query_1 = False;
+    Bool	list_providers = False;
     Bool        provsetoutsource = False;
     Bool        provsetoffsink = False;
     int		major, minor;
@@ -2912,7 +2949,7 @@ main (int argc, char **argv)
 	}
 	if (!strcmp ("--listproviders", argv[i]))
 	{
-	    providers = True;
+	    list_providers = True;
 	    action_requested = True;
 	    continue;
 	}
@@ -2986,6 +3023,8 @@ main (int argc, char **argv)
 	has_1_2 = True;
     if (major > 1 || (major == 1 && minor >= 3))
 	has_1_3 = True;
+    if (major > 1 || (major == 1 && minor >= 4))
+	has_1_4 = True;
 	
     if (has_1_2 && modeit)
     {
@@ -3543,23 +3582,24 @@ main (int argc, char **argv)
 	}
 	exit (0);
     }
-    if (providers) {
-	XRRProviderResources *providers;
+    if (list_providers) {
 	int k;
 	get_screen (current);
-	providers = XRRGetProviderResources(dpy, root);
-	if (providers) {
-	    printf("Providers: number : %d\n", providers->nproviders);
+	get_providers ();
 
-	    for (j = 0; j < providers->nproviders; j++) {
-	        XRRProviderInfo *info = XRRGetProviderInfo(dpy, res, providers->providers[j]);
-		printf("Provider %d: id: %d cap: 0x%x", j, (int)providers->providers[j], info->capabilities);
+	if (providers) {
+	    printf("Providers: number : %d\n", num_providers);
+
+	    for (j = 0; j < num_providers; j++) {
+		provider_t *provider = &providers[j];
+		XRRProviderInfo *info = provider->info;
+
+		printf("Provider %d: id: %d cap: 0x%x", j, (int)provider->provider.xid, info->capabilities);
 		for (k = 0; k < 4; k++)
 			if (info->capabilities & (1 << k))
 				printf(", %s", capability_name(1<<k));
 
 		printf(" crtcs: %d outputs: %d associated providers: %d name:%s\n", info->ncrtcs, info->noutputs, info->nassociatedproviders, info->name);
-		XRRFreeProviderInfo(info);
 	    }
 	}
     }
