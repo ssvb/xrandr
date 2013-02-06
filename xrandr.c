@@ -541,10 +541,22 @@ static double
 mode_refresh (XRRModeInfo *mode_info)
 {
     double rate;
+    unsigned int vTotal = mode_info->vTotal;
+
+    if (mode_info->modeFlags & RR_DoubleScan) {
+	/* doublescan doubles the number of lines */
+	vTotal *= 2;
+    }
+
+    if (mode_info->modeFlags & RR_Interlace) {
+	/* interlace splits the frame into two fields */
+	/* the field rate is what is typically reported by monitors */
+	vTotal /= 2;
+    }
     
-    if (mode_info->hTotal && mode_info->vTotal)
+    if (mode_info->hTotal && vTotal)
 	rate = ((double) mode_info->dotClock /
-		((double) mode_info->hTotal * (double) mode_info->vTotal));
+		((double) mode_info->hTotal * (double) vTotal));
     else
     	rate = 0;
     return rate;
