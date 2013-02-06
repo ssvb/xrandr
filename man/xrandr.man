@@ -78,7 +78,7 @@ screen. It can also set the screen size.
 
 If invoked without any option, it will dump the state of the outputs,
 showing the existing modes for each of them, with a '+' after the preferred
-mode and a '*' after the current mode.
+modes and a '*' after the current mode.
 
 There are a few global options. Other options modify the last output that is
 specified in earlier parameters in the command line. Multiple outputs may
@@ -249,7 +249,7 @@ Selects an output to reconfigure. Use either the name of the output or the
 XID.
 .IP \-\-auto
 For connected but disabled outputs, this will enable them using their
-preferred mode (or, something close to 96dpi if they have no preferred
+first preferred mode (or, something close to 96dpi if they have no preferred
 mode). For disconnected but enabled outputs, this will disable them.
 .IP "\-\-mode \fImode\fP"
 This selects a mode. Use either the name or the XID for \fImode\fP
