@@ -642,7 +642,7 @@ print_name (const name_t *name)
 {
     name_kind_t kind = name->kind;
 
-    if ((kind & name_xid))         return printf("XID 0x%x", name->xid);
+    if ((kind & name_xid))         return printf("XID 0x%x", (unsigned int)name->xid);
     else if ((kind & name_string)) return printf("name %s", name->string);
     else if ((kind & name_index))  return printf("index %d", name->index);
     else                           return printf("unknown name");
