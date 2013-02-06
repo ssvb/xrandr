@@ -2579,8 +2579,8 @@ main (int argc, char **argv)
 		for (dirind = 0; dirind < 4; dirind++) {
 		    if (strcmp (direction[dirind], argv[i]) == 0) break;
 		}
-		if ((dirind < 0) || (dirind > 3))  usage();
 	    }
+	    if ((dirind < 0) || (dirind > 3))  usage();
 	    rot = dirind;
 	    setit = True;
 	    action_requested = True;
