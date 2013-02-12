@@ -92,68 +92,65 @@ static const struct {
     { NULL,	    0 }
 };
 
-static void _X_NORETURN
+static void
 usage(void)
 {
-    fprintf(stderr, "usage: %s [options]\n", program_name);
-    fprintf(stderr, "  where options are:\n");
-    fprintf(stderr, "  -display <display> or -d <display>\n");
-    fprintf(stderr, "  -help\n");
-    fprintf(stderr, "  -o <normal,inverted,left,right,0,1,2,3>\n");
-    fprintf(stderr, "            or --orientation <normal,inverted,left,right,0,1,2,3>\n");
-    fprintf(stderr, "  -q        or --query\n");
-    fprintf(stderr, "  -s <size>/<width>x<height> or --size <size>/<width>x<height>\n");
-    fprintf(stderr, "  -r <rate> or --rate <rate> or --refresh <rate>\n");
-    fprintf(stderr, "  -v        or --version\n");
-    fprintf(stderr, "  -x        (reflect in x)\n");
-    fprintf(stderr, "  -y        (reflect in y)\n");
-    fprintf(stderr, "  --screen <screen>\n");
-    fprintf(stderr, "  --verbose\n");
-    fprintf(stderr, "  --current\n");
-    fprintf(stderr, "  --dryrun\n");
-    fprintf(stderr, "  --nograb\n");
-    fprintf(stderr, "  --prop or --properties\n");
-    fprintf(stderr, "  --fb <width>x<height>\n");
-    fprintf(stderr, "  --fbmm <width>x<height>\n");
-    fprintf(stderr, "  --dpi <dpi>/<output>\n");
-    fprintf(stderr, "  --output <output>\n");
-    fprintf(stderr, "      --auto\n");
-    fprintf(stderr, "      --mode <mode>\n");
-    fprintf(stderr, "      --preferred\n");
-    fprintf(stderr, "      --pos <x>x<y>\n");
-    fprintf(stderr, "      --rate <rate> or --refresh <rate>\n");
-    fprintf(stderr, "      --reflect normal,x,y,xy\n");
-    fprintf(stderr, "      --rotate normal,inverted,left,right\n");
-    fprintf(stderr, "      --left-of <output>\n");
-    fprintf(stderr, "      --right-of <output>\n");
-    fprintf(stderr, "      --above <output>\n");
-    fprintf(stderr, "      --below <output>\n");
-    fprintf(stderr, "      --same-as <output>\n");
-    fprintf(stderr, "      --set <property> <value>\n");
-    fprintf(stderr, "      --scale <x>x<y>\n");
-    fprintf(stderr, "      --scale-from <w>x<h>\n");
-    fprintf(stderr, "      --transform <a>,<b>,<c>,<d>,<e>,<f>,<g>,<h>,<i>\n");
-    fprintf(stderr, "      --off\n");
-    fprintf(stderr, "      --crtc <crtc>\n");
-    fprintf(stderr, "      --panning <w>x<h>[+<x>+<y>[/<track:w>x<h>+<x>+<y>[/<border:l>/<t>/<r>/<b>]]]\n");
-    fprintf(stderr, "      --gamma <r>:<g>:<b>\n");
-    fprintf(stderr, "      --primary\n");
-    fprintf(stderr, "  --noprimary\n");
-    fprintf(stderr, "  --newmode <name> <clock MHz>\n");
-    fprintf(stderr, "            <hdisp> <hsync-start> <hsync-end> <htotal>\n");
-    fprintf(stderr, "            <vdisp> <vsync-start> <vsync-end> <vtotal>\n");
-    fprintf(stderr, "            [flags...]\n");
-    fprintf(stderr, "            Valid flags: +HSync -HSync +VSync -VSync\n");
-    fprintf(stderr, "                         +CSync -CSync CSync Interlace DoubleScan\n");
-    fprintf(stderr, "  --rmmode <name>\n");
-    fprintf(stderr, "  --addmode <output> <name>\n");
-    fprintf(stderr, "  --delmode <output> <name>\n");
-    fprintf(stderr, "  --listproviders\n");
-    fprintf(stderr, "  --setprovideroutputsource <prov-xid> <source-xid>\n");
-    fprintf(stderr, "  --setprovideroffloadsink <prov-xid> <sink-xid>\n");
-
-    exit(1);
-    /*NOTREACHED*/
+    printf("usage: %s [options]\n", program_name);
+    printf("  where options are:\n");
+    printf("  -display <display> or -d <display>\n");
+    printf("  --help\n");
+    printf("  -o <normal,inverted,left,right,0,1,2,3>\n");
+    printf("            or --orientation <normal,inverted,left,right,0,1,2,3>\n");
+    printf("  -q        or --query\n");
+    printf("  -s <size>/<width>x<height> or --size <size>/<width>x<height>\n");
+    printf("  -r <rate> or --rate <rate> or --refresh <rate>\n");
+    printf("  -v        or --version\n");
+    printf("  -x        (reflect in x)\n");
+    printf("  -y        (reflect in y)\n");
+    printf("  --screen <screen>\n");
+    printf("  --verbose\n");
+    printf("  --current\n");
+    printf("  --dryrun\n");
+    printf("  --nograb\n");
+    printf("  --prop or --properties\n");
+    printf("  --fb <width>x<height>\n");
+    printf("  --fbmm <width>x<height>\n");
+    printf("  --dpi <dpi>/<output>\n");
+    printf("  --output <output>\n");
+    printf("      --auto\n");
+    printf("      --mode <mode>\n");
+    printf("      --preferred\n");
+    printf("      --pos <x>x<y>\n");
+    printf("      --rate <rate> or --refresh <rate>\n");
+    printf("      --reflect normal,x,y,xy\n");
+    printf("      --rotate normal,inverted,left,right\n");
+    printf("      --left-of <output>\n");
+    printf("      --right-of <output>\n");
+    printf("      --above <output>\n");
+    printf("      --below <output>\n");
+    printf("      --same-as <output>\n");
+    printf("      --set <property> <value>\n");
+    printf("      --scale <x>x<y>\n");
+    printf("      --scale-from <w>x<h>\n");
+    printf("      --transform <a>,<b>,<c>,<d>,<e>,<f>,<g>,<h>,<i>\n");
+    printf("      --off\n");
+    printf("      --crtc <crtc>\n");
+    printf("      --panning <w>x<h>[+<x>+<y>[/<track:w>x<h>+<x>+<y>[/<border:l>/<t>/<r>/<b>]]]\n");
+    printf("      --gamma <r>:<g>:<b>\n");
+    printf("      --primary\n");
+    printf("  --noprimary\n");
+    printf("  --newmode <name> <clock MHz>\n");
+    printf("            <hdisp> <hsync-start> <hsync-end> <htotal>\n");
+    printf("            <vdisp> <vsync-start> <vsync-end> <vtotal>\n");
+    printf("            [flags...]\n");
+    printf("            Valid flags: +HSync -HSync +VSync -VSync\n");
+    printf("                         +CSync -CSync CSync Interlace DoubleScan\n");
+    printf("  --rmmode <name>\n");
+    printf("  --addmode <output> <name>\n");
+    printf("  --delmode <output> <name>\n");
+    printf("  --listproviders\n");
+    printf("  --setprovideroutputsource <prov-xid> <source-xid>\n");
+    printf("  --setprovideroffloadsink <prov-xid> <sink-xid>\n");
 }
 
 static void _X_NORETURN _X_ATTRIBUTE_PRINTF(1,2)
@@ -178,6 +175,20 @@ warning (const char *format, ...)
     fprintf (stderr, "%s: ", program_name);
     vfprintf (stderr, format, ap);
     va_end (ap);
+}
+
+static void _X_NORETURN _X_ATTRIBUTE_PRINTF(1,2)
+argerr (const char *format, ...)
+{
+    va_list ap;
+
+    va_start (ap, format);
+    fprintf (stderr, "%s: ", program_name);
+    vfprintf (stderr, format, ap);
+    fprintf (stderr, "Try '%s --help' for more information.\n", program_name);
+    va_end (ap);
+    exit (1);
+    /*NOTREACHED*/
 }
 
 /* Because fmin requires C99 suppport */
@@ -530,10 +541,22 @@ static double
 mode_refresh (XRRModeInfo *mode_info)
 {
     double rate;
+    unsigned int vTotal = mode_info->vTotal;
+
+    if (mode_info->modeFlags & RR_DoubleScan) {
+	/* doublescan doubles the number of lines */
+	vTotal *= 2;
+    }
+
+    if (mode_info->modeFlags & RR_Interlace) {
+	/* interlace splits the frame into two fields */
+	/* the field rate is what is typically reported by monitors */
+	vTotal /= 2;
+    }
     
-    if (mode_info->hTotal && mode_info->vTotal)
+    if (mode_info->hTotal && vTotal)
 	rate = ((double) mode_info->dotClock /
-		((double) mode_info->hTotal * (double) mode_info->vTotal));
+		((double) mode_info->hTotal * (double) vTotal));
     else
     	rate = 0;
     return rate;
@@ -611,7 +634,7 @@ set_name (name_t *name, char *string, name_kind_t valid)
     else if (valid & name_string)
 	set_name_string (name, string);
     else
-	usage ();
+	argerr ("invalid name '%s'\n", string);
 }
 
 static int
@@ -619,7 +642,7 @@ print_name (const name_t *name)
 {
     name_kind_t kind = name->kind;
 
-    if ((kind & name_xid))         return printf("XID 0x%x", name->xid);
+    if ((kind & name_xid))         return printf("XID 0x%x", (unsigned int)name->xid);
     else if ((kind & name_string)) return printf("name %s", name->string);
     else if ((kind & name_index))  return printf("index %d", name->index);
     else                           return printf("unknown name");
@@ -2226,7 +2249,7 @@ check_strtol(char *s)
     char *endptr;
     int result = strtol(s, &endptr, 10);
     if (s == endptr)
-	usage();
+	argerr ("failed to parse '%s' as a number\n", s);
     return result;
 }
 
@@ -2236,7 +2259,7 @@ check_strtod(char *s)
     char *endptr;
     double result = strtod(s, &endptr);
     if (s == endptr)
-	usage();
+	argerr ("failed to parse '%s' as a number\n", s);
     return result;
 }
 
@@ -2264,7 +2287,7 @@ property_values_from_string(const char *str, const Atom type, const int format,
 
 	if (token == endptr || *endptr != '\0')
 	{
-	    usage ();
+	    argerr ("failed to parse '%s' as a number\n", token);
 	}
 
 	returned_bytes = realloc (returned_bytes, (nitems + 1) * bytes_per_item);
@@ -2486,14 +2509,13 @@ main (int argc, char **argv)
     program_name = argv[0];
     for (i = 1; i < argc; i++) {
 	if (!strcmp ("-display", argv[i]) || !strcmp ("-d", argv[i])) {
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    display_name = argv[i];
 	    continue;
 	}
-	if (!strcmp("-help", argv[i])) {
+	if (!strcmp("-help", argv[i]) || !strcmp("--help", argv[i])) {
 	    usage();
-	    action_requested = True;
-	    continue;
+	    exit(0);
 	}
 	if (!strcmp ("--verbose", argv[i])) {
 	    verbose = True;
@@ -2514,12 +2536,12 @@ main (int argc, char **argv)
 	}
 
 	if (!strcmp ("-s", argv[i]) || !strcmp ("--size", argv[i])) {
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    if (sscanf (argv[i], "%dx%d", &width, &height) == 2) {
 		have_pixel_size = True;
 	    } else {
 		size = check_strtol(argv[i]);
-                if (size < 0) usage();
+                if (size < 0) argerr ("--size argument must be nonnegative\n");
             }
 	    setit = True;
 	    action_requested = True;
@@ -2530,7 +2552,7 @@ main (int argc, char **argv)
 	    !strcmp ("--rate", argv[i]) ||
 	    !strcmp ("--refresh", argv[i]))
 	{
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    rate = check_strtod(argv[i]);
 	    setit = True;
 	    if (config_output)
@@ -2562,9 +2584,9 @@ main (int argc, char **argv)
 	    continue;
 	}
 	if (!strcmp ("--screen", argv[i])) {
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    screen = check_strtol(argv[i]);
-	    if (screen < 0) usage();
+	    if (screen < 0) argerr ("--screen argument must be nonnegative\n");
 	    continue;
 	}
 	if (!strcmp ("-q", argv[i]) || !strcmp ("--query", argv[i])) {
@@ -2573,14 +2595,15 @@ main (int argc, char **argv)
 	}
 	if (!strcmp ("-o", argv[i]) || !strcmp ("--orientation", argv[i])) {
 	    char *endptr;
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    dirind = strtol(argv[i], &endptr, 10);
 	    if (argv[i] == endptr) {
 		for (dirind = 0; dirind < 4; dirind++) {
 		    if (strcmp (direction[dirind], argv[i]) == 0) break;
 		}
-		if ((dirind < 0) || (dirind > 3))  usage();
 	    }
+	    if ((dirind < 0) || (dirind > 3))
+		argerr ("%s: invalid argument '%s'\n", argv[i-1], argv[i]);
 	    rot = dirind;
 	    setit = True;
 	    action_requested = True;
@@ -2597,7 +2620,7 @@ main (int argc, char **argv)
 	    continue;
 	}
 	if (!strcmp ("--output", argv[i])) {
-	    if (++i >= argc) usage();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 
 	    config_output = find_output_by_name (argv[i]);
 	    if (!config_output) {
@@ -2610,95 +2633,95 @@ main (int argc, char **argv)
 	    continue;
 	}
 	if (!strcmp ("--crtc", argv[i])) {
-	    if (++i >= argc) usage();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    set_name (&config_output->crtc, argv[i], name_xid|name_index);
 	    config_output->changes |= changes_crtc;
 	    continue;
 	}
 	if (!strcmp ("--mode", argv[i])) {
-	    if (++i >= argc) usage();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    set_name (&config_output->mode, argv[i], name_string|name_xid);
 	    config_output->changes |= changes_mode;
 	    continue;
 	}
 	if (!strcmp ("--preferred", argv[i])) {
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
 	    set_name_preferred (&config_output->mode);
 	    config_output->changes |= changes_mode;
 	    continue;
 	}
 	if (!strcmp ("--pos", argv[i])) {
-	    if (++i>=argc) usage ();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    if (sscanf (argv[i], "%dx%d",
 			&config_output->x, &config_output->y) != 2)
-		usage ();
+		argerr ("failed to parse '%s' as a position\n", argv[i]);
 	    config_output->changes |= changes_position;
 	    continue;
 	}
 	if (!strcmp ("--rotation", argv[i]) || !strcmp ("--rotate", argv[i])) {
-	    if (++i>=argc) usage ();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    for (dirind = 0; dirind < 4; dirind++) {
 		if (strcmp (direction[dirind], argv[i]) == 0) break;
 	    }
 	    if (dirind == 4)
-		usage ();
+		argerr ("%s: invalid argument '%s'\n", argv[i-1], argv[i]);
 	    config_output->rotation &= ~0xf;
 	    config_output->rotation |= 1 << dirind;
 	    config_output->changes |= changes_rotation;
 	    continue;
 	}
 	if (!strcmp ("--reflect", argv[i]) || !strcmp ("--reflection", argv[i])) {
-	    if (++i>=argc) usage ();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    for (dirind = 0; dirind < 4; dirind++) {
 		if (strcmp (reflections[dirind], argv[i]) == 0) break;
 	    }
 	    if (dirind == 4)
-		usage ();
+		argerr ("%s: invalid argument '%s'\n", argv[i-1], argv[i]);
 	    config_output->rotation &= ~(RR_Reflect_X|RR_Reflect_Y);
 	    config_output->rotation |= dirind * RR_Reflect_X;
 	    config_output->changes |= changes_reflection;
 	    continue;
 	}
 	if (!strcmp ("--left-of", argv[i])) {
-	    if (++i>=argc) usage ();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    config_output->relation = relation_left_of;
 	    config_output->relative_to = argv[i];
 	    config_output->changes |= changes_relation;
 	    continue;
 	}
 	if (!strcmp ("--right-of", argv[i])) {
-	    if (++i>=argc) usage ();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    config_output->relation = relation_right_of;
 	    config_output->relative_to = argv[i];
 	    config_output->changes |= changes_relation;
 	    continue;
 	}
 	if (!strcmp ("--above", argv[i])) {
-	    if (++i>=argc) usage ();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    config_output->relation = relation_above;
 	    config_output->relative_to = argv[i];
 	    config_output->changes |= changes_relation;
 	    continue;
 	}
 	if (!strcmp ("--below", argv[i])) {
-	    if (++i>=argc) usage ();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    config_output->relation = relation_below;
 	    config_output->relative_to = argv[i];
 	    config_output->changes |= changes_relation;
 	    continue;
 	}
 	if (!strcmp ("--same-as", argv[i])) {
-	    if (++i>=argc) usage ();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    config_output->relation = relation_same_as;
 	    config_output->relative_to = argv[i];
 	    config_output->changes |= changes_relation;
@@ -2706,8 +2729,8 @@ main (int argc, char **argv)
 	}
 	if (!strcmp ("--panning", argv[i])) {
 	    XRRPanning *pan;
-	    if (++i>=argc) usage ();
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    pan = &config_output->panning;
 	    switch (sscanf (argv[i], "%dx%d+%d+%d/%dx%d+%d+%d/%d/%d/%d/%d",
 			    &pan->width, &pan->height, &pan->left, &pan->top,
@@ -2729,32 +2752,32 @@ main (int argc, char **argv)
 	    case 12:
 		break;
 	    default:
-		usage ();
+		argerr ("%s: invalid argument '%s'\n", argv[i-1], argv[i]);
 	    }
 	    config_output->changes |= changes_panning;
 	    continue;
 	}
 	if (!strcmp ("--gamma", argv[i])) {
-	    if (!config_output) usage();
-	    if (++i>=argc) usage ();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    if (sscanf(argv[i], "%f:%f:%f", &config_output->gamma.red,
 		    &config_output->gamma.green, &config_output->gamma.blue) != 3)
-		usage ();
+		argerr ("%s: invalid argument '%s'\n", argv[i-1], argv[i]);
 	    config_output->changes |= changes_gamma;
 	    setit_1_2 = True;
 	    continue;
 	}
 	if (!strcmp ("--brightness", argv[i])) {
-	    if (!config_output) usage();
-	    if (++i>=argc) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    if (sscanf(argv[i], "%f", &config_output->brightness) != 1)
-		usage ();
+		argerr ("%s: invalid argument '%s'\n", argv[i-1], argv[i]);
 	    config_output->changes |= changes_gamma;
 	    setit_1_2 = True;
 	    continue;
 	}
 	if (!strcmp ("--primary", argv[i])) {
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
 	    config_output->changes |= changes_primary;
 	    config_output->primary = True;
 	    setit_1_2 = True;
@@ -2767,14 +2790,13 @@ main (int argc, char **argv)
 	}
 	if (!strcmp ("--set", argv[i])) {
 	    output_prop_t   *prop;
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (i+2 >= argc) argerr ("%s requires two arguments\n", argv[i]);
 	    prop = malloc (sizeof (output_prop_t));
 	    prop->next = config_output->props;
 	    config_output->props = prop;
-	    if (++i>=argc) usage ();
-	    prop->name = argv[i];
-	    if (++i>=argc) usage ();
-	    prop->value = argv[i];
+	    prop->name = argv[++i];
+	    prop->value = argv[++i];
 	    propit = True;
 	    config_output->changes |= changes_property;
 	    setit_1_2 = True;
@@ -2783,10 +2805,10 @@ main (int argc, char **argv)
 	if (!strcmp ("--scale", argv[i]))
 	{
 	    double  sx, sy;
-	    if (!config_output) usage();
-	    if (++i>=argc) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    if (sscanf (argv[i], "%lfx%lf", &sx, &sy) != 2)
-		usage ();
+		argerr ("failed to parse '%s' as a scaling factor\n", argv[i]);
 	    init_transform (&config_output->transform);
 	    config_output->transform.transform.matrix[0][0] = XDoubleToFixed (sx);
 	    config_output->transform.transform.matrix[1][1] = XDoubleToFixed (sy);
@@ -2803,12 +2825,12 @@ main (int argc, char **argv)
 	if (!strcmp ("--scale-from", argv[i]))
 	{
 	    int w, h;
-	    if (!config_output) usage();
-	    if (++i>=argc) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    if (sscanf (argv[i], "%dx%d", &w, &h) != 2)
-		usage ();
+		argerr ("failed to parse '%s' as a scale-from size\n", argv[i]);
 	    if (w <=0 || h <= 0)
-		usage ();
+		argerr ("--scale-from dimensions must be nonnegative\n");
 	    config_output->scale_from_w = w;
 	    config_output->scale_from_h = h;
 	    config_output->changes |= changes_transform;
@@ -2817,8 +2839,8 @@ main (int argc, char **argv)
 	if (!strcmp ("--transform", argv[i])) {
 	    double  transform[3][3];
 	    int	    k, l;
-	    if (!config_output) usage();
-	    if (++i>=argc) usage ();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    init_transform (&config_output->transform);
 	    if (strcmp (argv[i], "none") != 0)
 	    {
@@ -2827,7 +2849,7 @@ main (int argc, char **argv)
 			   &transform[1][0],&transform[1][1],&transform[1][2],
 			   &transform[2][0],&transform[2][1],&transform[2][2])
 		    != 9)
-		    usage ();
+		    argerr ("failed to parse '%s' as a transformation\n", argv[i]);
 		init_transform (&config_output->transform);
 		for (k = 0; k < 3; k++)
 		    for (l = 0; l < 3; l++) {
@@ -2841,33 +2863,33 @@ main (int argc, char **argv)
 	    continue;
 	}
 	if (!strcmp ("--off", argv[i])) {
-	    if (!config_output) usage();
+	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
 	    set_name_xid (&config_output->mode, None);
 	    set_name_xid (&config_output->crtc, None);
 	    config_output->changes |= changes_mode;
 	    continue;
 	}
 	if (!strcmp ("--fb", argv[i])) {
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    if (sscanf (argv[i], "%dx%d",
 			&fb_width, &fb_height) != 2)
-		usage ();
+		argerr ("failed to parse '%s' as a framebuffer size\n", argv[i]);
 	    setit_1_2 = True;
 	    action_requested = True;
 	    continue;
 	}
 	if (!strcmp ("--fbmm", argv[i])) {
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    if (sscanf (argv[i], "%dx%d",
 			&fb_width_mm, &fb_height_mm) != 2)
-		usage ();
+		argerr ("failed to parse '%s' as a physical size\n", argv[i]);
 	    setit_1_2 = True;
 	    action_requested = True;
 	    continue;
 	}
 	if (!strcmp ("--dpi", argv[i])) {
 	    char *strtod_error;
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    dpi = strtod(argv[i], &strtod_error);
 	    if (argv[i] == strtod_error)
 	    {
@@ -2906,7 +2928,8 @@ main (int argc, char **argv)
 	    double    clock;
 	    
 	    ++i;
-	    if (i + 9 >= argc) usage ();
+	    if (i + 9 >= argc)
+		argerr ("failed to parse '%s' as a mode specification\n", argv[i]);
 	    m->mode.name = argv[i];
 	    m->mode.nameLength = strlen (argv[i]);
 	    i++;
@@ -2945,7 +2968,7 @@ main (int argc, char **argv)
 	{
 	    umode_t  *m = malloc (sizeof (umode_t));
 
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    set_name (&m->name, argv[i], name_string|name_xid);
 	    m->action = umode_destroy;
 	    m->next = umodes;
@@ -2958,10 +2981,9 @@ main (int argc, char **argv)
 	{
 	    umode_t  *m = malloc (sizeof (umode_t));
 
-	    if (++i>=argc) usage ();
-	    set_name (&m->output, argv[i], name_string|name_xid);
-	    if (++i>=argc) usage();
-	    set_name (&m->name, argv[i], name_string|name_xid);
+	    if (i+2 >= argc) argerr ("%s requires two arguments\n", argv[i]);
+	    set_name (&m->output, argv[++i], name_string|name_xid);
+	    set_name (&m->name, argv[++i], name_string|name_xid);
 	    m->action = umode_add;
 	    m->next = umodes;
 	    umodes = m;
@@ -2973,10 +2995,9 @@ main (int argc, char **argv)
 	{
 	    umode_t  *m = malloc (sizeof (umode_t));
 
-	    if (++i>=argc) usage ();
-	    set_name (&m->output, argv[i], name_string|name_xid);
-	    if (++i>=argc) usage();
-	    set_name (&m->name, argv[i], name_string|name_xid);
+	    if (i+2 >= argc) argerr ("%s requires two arguments\n", argv[i]);
+	    set_name (&m->output, argv[++i], name_string|name_xid);
+	    set_name (&m->name, argv[++i], name_string|name_xid);
 	    m->action = umode_delete;
 	    m->next = umodes;
 	    umodes = m;
@@ -2992,7 +3013,7 @@ main (int argc, char **argv)
 	}
 	if (!strcmp("--setprovideroutputsource", argv[i]))
 	{ 
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    set_name (&provider_name, argv[i], name_string|name_xid|name_index);
 	    if (++i>=argc) 
 		set_name_xid (&output_source_provider_name, 0);
@@ -3004,7 +3025,7 @@ main (int argc, char **argv)
 	}
 	if (!strcmp("--setprovideroffloadsink", argv[i]))
 	{ 
-	    if (++i>=argc) usage ();
+	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    set_name (&provider_name, argv[i], name_string|name_xid|name_index);
 	    if (++i>=argc) 
 		set_name_xid (&offload_sink_provider_name, 0);
@@ -3015,7 +3036,7 @@ main (int argc, char **argv)
 	    continue;
 	}
 
-	usage();
+	argerr ("unrecognized option '%s'\n", argv[i]);
     }
     if (!action_requested)
 	    query = True;
