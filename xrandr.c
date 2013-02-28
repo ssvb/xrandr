@@ -3560,6 +3560,8 @@ main (int argc, char **argv)
 			    print_output_property_value (False, 32, actual_type,
 							 (unsigned char *) &(propinfo->values[k * 2 + 1]));
 			    printf (")");
+			    if (k < propinfo->num_values / 2 - 1)
+				printf (", ");
 			}
 			printf ("\n");
 		    }
@@ -3570,6 +3572,8 @@ main (int argc, char **argv)
 			{
 			    print_output_property_value (False, 32, actual_type,
 							 (unsigned char *) &(propinfo->values[k]));
+			    if (k < propinfo->num_values - 1)
+				printf (", ");
 			}
 			printf ("\n");
 		    }
