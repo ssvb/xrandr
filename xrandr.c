@@ -2924,7 +2924,7 @@ main (int argc, char **argv)
 	}
 	if (!strcmp ("--newmode", argv[i]))
 	{
-	    umode_t  *m = malloc (sizeof (umode_t));
+	    umode_t  *m = calloc (1, sizeof (umode_t));
 	    double    clock;
 	    
 	    ++i;
@@ -2966,7 +2966,7 @@ main (int argc, char **argv)
 	}
 	if (!strcmp ("--rmmode", argv[i]))
 	{
-	    umode_t  *m = malloc (sizeof (umode_t));
+	    umode_t  *m = calloc (1, sizeof (umode_t));
 
 	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    set_name (&m->name, argv[i], name_string|name_xid);
@@ -2979,7 +2979,7 @@ main (int argc, char **argv)
 	}
 	if (!strcmp ("--addmode", argv[i]))
 	{
-	    umode_t  *m = malloc (sizeof (umode_t));
+	    umode_t  *m = calloc (1, sizeof (umode_t));
 
 	    if (i+2 >= argc) argerr ("%s requires two arguments\n", argv[i]);
 	    set_name (&m->output, argv[++i], name_string|name_xid);
@@ -2993,7 +2993,7 @@ main (int argc, char **argv)
 	}
 	if (!strcmp ("--delmode", argv[i]))
 	{
-	    umode_t  *m = malloc (sizeof (umode_t));
+	    umode_t  *m = calloc (1, sizeof (umode_t));
 
 	    if (i+2 >= argc) argerr ("%s requires two arguments\n", argv[i]);
 	    set_name (&m->output, argv[++i], name_string|name_xid);
