@@ -2521,6 +2521,8 @@ find_provider (name_t *name)
 {
     int i;
 
+    if ((name->kind & name_xid) && name->xid == 0)
+	return NULL;
     for (i = 0; i < num_providers; i++) {
 	provider_t *p = &providers[i];
 	name_kind_t common = name->kind & p->provider.kind;
@@ -3304,7 +3306,7 @@ main (int argc, char **argv)
 	provider = find_provider (&provider_name);
 	source = find_provider(&output_source_provider_name);
 
-	XRRSetProviderOutputSource(dpy, provider->provider.xid, source->provider.xid);
+	XRRSetProviderOutputSource(dpy, provider->provider.xid, source ? source->provider.xid : 0);
     }
     if (provsetoffsink)
     {
@@ -3319,7 +3321,7 @@ main (int argc, char **argv)
 	provider = find_provider (&provider_name);
 	sink = find_provider(&offload_sink_provider_name);
 
-	XRRSetProviderOffloadSink(dpy, provider->provider.xid, sink->provider.xid);
+	XRRSetProviderOffloadSink(dpy, provider->provider.xid, sink ? sink->provider.xid : 0);
     }
     if (setit_1_2)
     {
