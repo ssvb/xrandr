@@ -543,7 +543,7 @@ static double
 mode_refresh (XRRModeInfo *mode_info)
 {
     double rate;
-    unsigned int vTotal = mode_info->vTotal;
+    double vTotal = mode_info->vTotal;
 
     if (mode_info->modeFlags & RR_DoubleScan) {
 	/* doublescan doubles the number of lines */
