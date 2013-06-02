@@ -41,7 +41,9 @@
 #include <stdarg.h>
 #include <math.h>
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
 
 static char	*program_name;
 static Display	*dpy;
