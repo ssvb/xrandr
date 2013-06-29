@@ -139,6 +139,7 @@ usage(void)
     printf("      --crtc <crtc>\n");
     printf("      --panning <w>x<h>[+<x>+<y>[/<track:w>x<h>+<x>+<y>[/<border:l>/<t>/<r>/<b>]]]\n");
     printf("      --gamma <r>:<g>:<b>\n");
+    printf("      --brightness <value>\n");
     printf("      --primary\n");
     printf("  --noprimary\n");
     printf("  --newmode <name> <clock MHz>\n");
