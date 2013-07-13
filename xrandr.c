@@ -229,7 +229,7 @@ reflection_name (Rotation rotation)
     return "invalid reflection";
 }
 
-static char *
+static const char *
 capability_name (int cap_bit)
 {
     switch (cap_bit) {
