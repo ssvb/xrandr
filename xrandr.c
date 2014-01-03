@@ -2415,6 +2415,42 @@ print_output_property_value(Bool is_edid,
 }
 
 static void
+print_output_property(const char *atom_name,
+                      int value_format,
+                      Atom value_type,
+                      int nitems,
+                      const unsigned char *prop)
+{
+    int bytes_per_item = value_format / 8;
+    Bool is_edid = strcmp (atom_name, "EDID") == 0;
+    int k;
+
+    if (is_edid)
+    {
+	printf ("\n\t\t");
+    }
+
+    for (k = 0; k < nitems; k++)
+    {
+	if (k != 0)
+	{
+	    if ((k % 16) == 0)
+	    {
+		printf ("\n\t\t");
+	    }
+	}
+	print_output_property_value (is_edid, value_format, value_type,
+				     prop + (k * bytes_per_item));
+	if (!is_edid)
+	{
+	    printf (" ");
+	}
+    }
+
+    printf ("\n");
+}
+
+static void
 get_providers (void)
 {
     XRRProviderResources *pr;
@@ -3510,8 +3546,7 @@ main (int argc, char **argv)
 		    Atom actual_type;
 		    XRRPropertyInfo *propinfo;
 		    char *atom_name = XGetAtomName (dpy, props[j]);
-		    Bool is_edid = strcmp (atom_name, "EDID") == 0;
-		    int bytes_per_item, k;
+		    int k;
 
 		    XRRGetOutputProperty (dpy, output->output.xid, props[j],
 					  0, 100, False, False,
@@ -3522,33 +3557,10 @@ main (int argc, char **argv)
 		    propinfo = XRRQueryOutputProperty(dpy, output->output.xid,
 						      props[j]);
 
-		    bytes_per_item = actual_format / 8;
-
 		    printf ("\t%s: ", atom_name);
 
-		    if (is_edid)
-		    {
-			printf ("\n\t\t");
-		    }
-
-		    for (k = 0; k < nitems; k++)
-		    {
-			if (k != 0)
-			{
-			    if ((k % 16) == 0)
-			    {
-				printf ("\n\t\t");
-			    }
-			}
-			print_output_property_value (is_edid, actual_format,
-						     actual_type,
-						     prop + (k * bytes_per_item));
-			if (!is_edid)
-			{
-			    printf (" ");
-			}
-		    }
-		    printf ("\n");
+		    print_output_property(atom_name, actual_format,
+					  actual_type, nitems, prop);
 
 		    if (propinfo->range && propinfo->num_values > 0)
 		    {
