@@ -2342,19 +2342,10 @@ property_values_from_string(const char *str, const Atom type, const int format,
 
 
 static void
-print_output_property_value(Bool is_edid,
-                            int value_format, /* 8, 16, 32 */
+print_output_property_value(int value_format, /* 8, 16, 32 */
                             Atom value_type,  /* XA_{ATOM,INTEGER,CARDINAL} */
                             const void *value_bytes)
 {
-    /* special-case the EDID */
-    if (is_edid && value_format == 8)
-    {
-	const uint8_t *val = value_bytes;
-	printf ("%02" PRIx8, *val);
-	return;
-    }
-
     if (value_type == XA_ATOM && value_format == 32)
     {
 	const Atom *val = value_bytes;
@@ -2415,6 +2406,26 @@ print_output_property_value(Bool is_edid,
 }
 
 static void
+print_edid(int nitems, const unsigned char *prop)
+{
+    int k;
+
+    printf ("\n\t\t");
+
+    for (k = 0; k < nitems; k++)
+    {
+	if (k != 0 && (k % 16) == 0)
+	{
+	    printf ("\n\t\t");
+	}
+
+	printf("%02" PRIx8, prop[k]);
+    }
+
+    printf("\n");
+}
+
+static void
 print_output_property(const char *atom_name,
                       int value_format,
                       Atom value_type,
@@ -2422,12 +2433,16 @@ print_output_property(const char *atom_name,
                       const unsigned char *prop)
 {
     int bytes_per_item = value_format / 8;
-    Bool is_edid = strcmp (atom_name, "EDID") == 0;
     int k;
 
-    if (is_edid)
+    /*
+     * Check for properties that need special formatting.
+     */
+    if (strcmp (atom_name, "EDID") == 0 && value_format == 8 &&
+	value_type == XA_INTEGER)
     {
-	printf ("\n\t\t");
+	print_edid (nitems, prop);
+	return;
     }
 
     for (k = 0; k < nitems; k++)
@@ -2439,12 +2454,9 @@ print_output_property(const char *atom_name,
 		printf ("\n\t\t");
 	    }
 	}
-	print_output_property_value (is_edid, value_format, value_type,
+	print_output_property_value (value_format, value_type,
 				     prop + (k * bytes_per_item));
-	if (!is_edid)
-	{
-	    printf (" ");
-	}
+	printf (" ");
     }
 
     printf ("\n");
@@ -3569,10 +3581,10 @@ main (int argc, char **argv)
 			for (k = 0; k < propinfo->num_values / 2; k++)
 			{
 			    printf ("(");
-			    print_output_property_value (False, 32, actual_type,
+			    print_output_property_value (32, actual_type,
 							 (unsigned char *) &(propinfo->values[k * 2]));
 			    printf (", ");
-			    print_output_property_value (False, 32, actual_type,
+			    print_output_property_value (32, actual_type,
 							 (unsigned char *) &(propinfo->values[k * 2 + 1]));
 			    printf (")");
 			    if (k < propinfo->num_values / 2 - 1)
@@ -3585,7 +3597,7 @@ main (int argc, char **argv)
 			printf ("\t\tsupported: ");
 			for (k = 0; k < propinfo->num_values; k++)
 			{
-			    print_output_property_value (False, 32, actual_type,
+			    print_output_property_value (32, actual_type,
 							 (unsigned char *) &(propinfo->values[k]));
 			    if (k < propinfo->num_values - 1)
 				printf (", ");
