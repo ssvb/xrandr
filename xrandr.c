@@ -2426,6 +2426,25 @@ print_edid(int nitems, const unsigned char *prop)
 }
 
 static void
+print_guid(const unsigned char *prop)
+{
+    int k;
+
+    printf("{");
+
+    for (k = 0; k < 16; k++)
+    {
+	printf("%02" PRIX8, prop[k]);
+	if (k == 3 || k == 5 || k == 7 || k == 9)
+	{
+	    printf("-");
+	}
+    }
+
+    printf("}\n");
+}
+
+static void
 print_output_property(const char *atom_name,
                       int value_format,
                       Atom value_type,
@@ -2442,6 +2461,12 @@ print_output_property(const char *atom_name,
 	value_type == XA_INTEGER)
     {
 	print_edid (nitems, prop);
+	return;
+    }
+    else if (strcmp (atom_name, "GUID") == 0 && value_format == 8 &&
+	     value_type == XA_INTEGER && nitems == 16)
+    {
+	print_guid (prop);
 	return;
     }
 
