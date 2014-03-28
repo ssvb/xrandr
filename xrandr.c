@@ -3266,13 +3266,13 @@ main (int argc, char **argv)
 		    nelements = 1;
 		    format = 32;
 		}
-		else if ((type == XA_ATOM))
+		else if (type == XA_ATOM)
 		{
 		    ulong_value = XInternAtom (dpy, prop->value, False);
 		    data = (unsigned char *) &ulong_value;
 		    nelements = 1;
 		}
-		else if ((type == XA_STRING || type == AnyPropertyType))
+		else if (type == XA_STRING || type == AnyPropertyType)
 		{
 		    type = XA_STRING;
 		    data = (unsigned char *) prop->value;
