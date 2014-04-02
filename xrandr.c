@@ -1394,7 +1394,7 @@ set_gamma(void)
     output_t	*output;
 
     for (output = all_outputs; output; output = output->next) {
-	int i, size, shift;
+	int i, size;
 	crtc_t *crtc;
 	XRRCrtcGamma *crtc_gamma;
 	float gammaRed;
@@ -1429,14 +1429,6 @@ set_gamma(void)
 	    continue;
 	}
 
-	/*
-	 * The hardware color lookup table has a number of significant
-	 * bits equal to ffs(size) - 1; compute all values so that
-	 * they are in the range [0,size) then shift the values so
-	 * that they occupy the MSBs of the 16-bit X Color.
-	 */
-	shift = 16 - (ffs(size) - 1);
-
 	crtc_gamma = XRRAllocGamma(size);
 	if (!crtc_gamma) {
 	    fatal("Gamma allocation failed.\n");
@@ -1456,28 +1448,25 @@ set_gamma(void)
 
 	for (i = 0; i < size; i++) {
 	    if (gammaRed == 1.0 && output->brightness == 1.0)
-		crtc_gamma->red[i] = i;
+		crtc_gamma->red[i] = (double)i / (double)(size - 1) * 65535.0;
 	    else
 		crtc_gamma->red[i] = dmin(pow((double)i/(double)(size - 1),
 					      gammaRed) * output->brightness,
-					  1.0) * (double)(size - 1);
-	    crtc_gamma->red[i] <<= shift;
+					  1.0) * 65535.0;
 
 	    if (gammaGreen == 1.0 && output->brightness == 1.0)
-		crtc_gamma->green[i] = i;
+		crtc_gamma->green[i] = (double)i / (double)(size - 1) * 65535.0;
 	    else
 		crtc_gamma->green[i] = dmin(pow((double)i/(double)(size - 1),
 						gammaGreen) * output->brightness,
-					    1.0) * (double)(size - 1);
-	    crtc_gamma->green[i] <<= shift;
+					    1.0) * 65535.0;
 
 	    if (gammaBlue == 1.0 && output->brightness == 1.0)
-		crtc_gamma->blue[i] = i;
+		crtc_gamma->blue[i] = (double)i / (double)(size - 1) * 65535.0;
 	    else
 		crtc_gamma->blue[i] = dmin(pow((double)i/(double)(size - 1),
 					       gammaBlue) * output->brightness,
-					   1.0) * (double)(size - 1);
-	    crtc_gamma->blue[i] <<= shift;
+					   1.0) * 65535.0;
 	}
 
 	XRRSetCrtcGamma(dpy, crtc->crtc.xid, crtc_gamma);
