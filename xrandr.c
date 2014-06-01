@@ -3861,10 +3861,6 @@ main (int argc, char **argv)
 	else
 	    printf ("neither axis");
 	printf ("\n");
-
-	if (reflection & RR_Reflect_X) printf("Setting reflection on X axis\n");
-
-	if (reflection & RR_Reflect_Y) printf("Setting reflection on Y axis\n");
     }
 
     /* we should test configureNotify on the root window */
