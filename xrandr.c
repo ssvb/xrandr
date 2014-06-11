@@ -2571,6 +2571,8 @@ main (int argc, char **argv)
     Bool        provsetoffsink = False;
     int		major, minor;
     Bool	current = False;
+    Bool	toggle_x = False;
+    Bool	toggle_y = False;
 
     program_name = argv[0];
     for (i = 1; i < argc; i++) {
@@ -2639,13 +2641,13 @@ main (int argc, char **argv)
 	}
 
 	if (!strcmp ("-x", argv[i])) {
-	    reflection |= RR_Reflect_X;
+	    toggle_x = True;
 	    setit = True;
 	    action_requested = True;
 	    continue;
 	}
 	if (!strcmp ("-y", argv[i])) {
-	    reflection |= RR_Reflect_Y;
+	    toggle_y = True;
 	    setit = True;
 	    action_requested = True;
 	    continue;
@@ -3823,6 +3825,9 @@ main (int argc, char **argv)
 
     {
 	Rotation rotations = XRRConfigRotations(sc, &current_rotation);
+
+	if (toggle_x && !(current_rotation & RR_Reflect_X)) reflection |= RR_Reflect_X;
+	if (toggle_y && !(current_rotation & RR_Reflect_Y)) reflection |= RR_Reflect_Y;
 
 	if (query) {
 	    printf("Current rotation - %s\n",
