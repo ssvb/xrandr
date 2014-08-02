@@ -139,6 +139,7 @@ usage(void)
            "      --crtc <crtc>\n"
            "      --panning <w>x<h>[+<x>+<y>[/<track:w>x<h>+<x>+<y>[/<border:l>/<t>/<r>/<b>]]]\n"
            "      --gamma <r>:<g>:<b>\n"
+           "      --brightness <value>\n"
            "      --primary\n"
            "  --noprimary\n"
            "  --newmode <name> <clock MHz>\n"
