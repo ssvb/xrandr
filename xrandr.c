@@ -463,6 +463,18 @@ mode_width (XRRModeInfo *mode_info, Rotation rotation)
     }
 }
 
+static void
+make_fixed_point_matrix (XTransform *transform, double matrix[3][3])
+{
+    /* XDoubleToFixed does not provide correct rounding, so use a workaround */
+    double fixed_1 = XDoubleToFixed (1);
+    int k, l;
+
+    for (k = 0; k < 3; k++)
+	for (l = 0; l < 3; l++)
+	    transform->matrix[k][l] = floor (matrix[k][l] * fixed_1 + 0.5);
+}
+
 static Bool
 transform_point (XTransform *transform, double *xp, double *yp)
 {
@@ -2908,7 +2920,6 @@ main (int argc, char **argv)
 	}
 	if (!strcmp ("--transform", argv[i])) {
 	    double  transform[3][3];
-	    int	    k, l;
 	    if (!config_output) argerr ("%s must be used after --output\n", argv[i]);
 	    if (++i >= argc) argerr ("%s requires an argument\n", argv[i-1]);
 	    init_transform (&config_output->transform);
@@ -2921,10 +2932,7 @@ main (int argc, char **argv)
 		    != 9)
 		    argerr ("failed to parse '%s' as a transformation\n", argv[i]);
 		init_transform (&config_output->transform);
-		for (k = 0; k < 3; k++)
-		    for (l = 0; l < 3; l++) {
-			config_output->transform.transform.matrix[k][l] = XDoubleToFixed (transform[k][l]);
-		    }
+		make_fixed_point_matrix(&config_output->transform.transform, transform);
 		config_output->transform.filter = "bilinear";
 		config_output->transform.nparams = 0;
 		config_output->transform.params = NULL;
