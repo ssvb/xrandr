@@ -463,16 +463,183 @@ mode_width (XRRModeInfo *mode_info, Rotation rotation)
     }
 }
 
+/* Something that is way too small for 16.16 fixed point representation */
+#define MATRIX_EPSILON                (1.0 / (1 << 24))
+/* The matrix coefficients can't be larger an this */
+#define MATRIX_FIXED_POINT_MAXVAL     32767.0
+/* Configures the minimal range for scale factor search */
+#define MATRIX_SCALE_RANGE            1.5
+/* Bruteforce search runs this number of iterations */
+#define MATRIX_BRUTEFORCE_LOOP_COUNT  10000
+
+static Bool
+is_matrix_affine (double matrix[3][3])
+{
+    return (fabs (matrix[2][0]) < MATRIX_EPSILON &&
+	fabs (matrix[2][1]) < MATRIX_EPSILON &&
+	fabs (matrix[2][2] - 1.0) < MATRIX_EPSILON);
+}
+
+static inline double
+round_to_nearest_integer (double x)
+{
+    return floor(x + 0.5);
+}
+
+/*
+ * This function tries to find the best suitable scale factor (from the range
+ * between 'minscale' and 'maxscale'), so that 'orig_a * scale' and
+ * 'orig_b * scale' are very close to some integer values as possible.
+ * A bruteforce search is performed, trying to minimize the squared distance.
+ *
+ * The geometric interpretation of this process is a line, originating
+ * from (0, 0) and going through the first quadrant on a Cartesian plane.
+ * The slope of this line depends on the ratio between 'orig_a' and 'orig_b'.
+ * The line passes near a large number of points with integer coordinates.
+ * The distances between the line and these points are evaluated.
+ */
+static double
+matrix_find_best_scale_factor(double orig_a, double orig_b,
+			      double minscale, double maxscale)
+{
+    double a = orig_a, b = orig_b;
+    double best_sqr_dist = 1.0;
+    double best_scale_factor = maxscale;
+    double sqr_orig_a, sqr_orig_b;
+    double recip_orig_a, recip_orig_b, recip_sqr_orig_a_plus_sqr_orig_b;
+    double refscale;
+    double refscale_step = (maxscale - minscale) / MATRIX_BRUTEFORCE_LOOP_COUNT;
+
+    /* Ensure that 'orig_a' and 'orig_b' are both positive non-zero values */
+    orig_a = fabs(orig_a);
+    orig_b = fabs(orig_b);
+    if (orig_a < MATRIX_EPSILON)
+	orig_a = MATRIX_EPSILON;
+    if (orig_b < MATRIX_EPSILON)
+	orig_b = MATRIX_EPSILON;
+
+    /* Pre-computed constants */
+    sqr_orig_a = orig_a * orig_a;
+    sqr_orig_b = orig_b * orig_b;
+    recip_orig_a = 1.0 / orig_a;
+    recip_orig_b = 1.0 / orig_b;
+    recip_sqr_orig_a_plus_sqr_orig_b = 1.0 / (sqr_orig_a + sqr_orig_b);
+
+    /*
+     * Try different scale factors between 'minscale' and 'maxscale'. They
+     * are only used as the initial approximations though.
+     */
+    for (refscale = minscale; refscale < maxscale; refscale += refscale_step) {
+	double scale1, scale2, scale, sqr_dist;
+	double rounded_a, rounded_b;
+	/*
+	 * Identify the nearest point with integer coordinates
+	 * (rounded_a, rounded_b)
+	 */
+	a = orig_a * refscale;
+	b = orig_b * refscale;
+	rounded_a = round_to_nearest_integer(a);
+	rounded_b = round_to_nearest_integer(b);
+	/*
+	 * Find the exact scale factor value ('scale'), which provides the
+	 * minimal distance to the selected point with integer coordinates.
+	 */
+	scale1 = rounded_a * recip_orig_a;
+	scale2 = rounded_b * recip_orig_b;
+	scale = (scale1 * sqr_orig_a + scale2 * sqr_orig_b) *
+		recip_sqr_orig_a_plus_sqr_orig_b;
+	/*
+	 * Squared distance from the selected point with integer coordinates
+	 */
+	sqr_dist = (rounded_a - a) * (rounded_a - a) +
+		   (rounded_b - b) * (rounded_b - b);
+	/*
+	 * Check if this one is the best candidate so far
+	 */
+	if (sqr_dist < best_sqr_dist && scale >= minscale && scale <= maxscale) {
+	    best_sqr_dist = sqr_dist;
+	    best_scale_factor = scale;
+        }
+    }
+    return best_scale_factor;
+}
+
+
 static void
 make_fixed_point_matrix (XTransform *transform, double matrix[3][3])
 {
     /* XDoubleToFixed does not provide correct rounding, so use a workaround */
     double fixed_1 = XDoubleToFixed (1);
-    int k, l;
+    int k, l, is_affine = is_matrix_affine (matrix);
+    double scale = 1.0;
+
+    /*
+     * For non-affine matrices it is possible to find an optimal rescale factor
+     * to minimize rounding errors in the most critical G and H coefficients.
+     */
+    if (!is_affine) {
+	double max_val = 0, min_scale, max_scale;
+
+	/* Find the largest element in the matrix */
+	for (k = 0; k < 3; k++)
+	    for (l = 0; l < 3; l++) {
+		double val = fabs (matrix[k][l]);
+		if (val > max_val)
+		    max_val = val;
+	    }
+	if (max_val < MATRIX_EPSILON)
+	    fatal ("null matrix can't be used for the --transform option\n");
+
+	/* Select the range of the potential scale factors to scan */
+	max_scale = MATRIX_FIXED_POINT_MAXVAL / max_val;
+	min_scale = (max_scale >= MATRIX_SCALE_RANGE) ?
+					1.0 : max_scale / MATRIX_SCALE_RANGE;
+
+	/* Find the optimal scale factor  */
+	scale = matrix_find_best_scale_factor(matrix[2][0] * fixed_1,
+					      matrix[2][1] * fixed_1,
+					      min_scale, max_scale);
+
+	/*
+	 * When in verbose mode, dump the original matrix in octave compatible
+	 * format
+	 */
+	if (verbose) {
+	    printf ("##### non-affine transform, need rescale for better accuracy #####\n");
+	    printf ("matrix_rescale_factor = %.10f\n", scale);
+	    printf ("original_matrix = [ ");
+	    for (k = 0; k < 3; k++) {
+		for (l = 0; l < 3; l++)
+		    printf ("%20.10f ", matrix[k][l]);
+		if (k != 2)
+		    printf (";\n%20s", "");
+	    }
+	    printf("]\n");
+	}
+    }
 
     for (k = 0; k < 3; k++)
-	for (l = 0; l < 3; l++)
-	    transform->matrix[k][l] = floor (matrix[k][l] * fixed_1 + 0.5);
+	for (l = 0; l < 3; l++) {
+	    double scaled_val = matrix[k][l] * scale;
+	    transform->matrix[k][l] = floor (scaled_val * fixed_1 + 0.5);
+	}
+
+    /*
+     * When in verbose mode, also dump the final matrix in octave compatible
+     * format. The 16.16 fixed point values are converted back to double
+     * precision floating point format and printed to the console.
+     */
+    if (verbose && !is_affine) {
+	printf("adjusted_matrix = [ ");
+	for (k = 0; k < 3; k++) {
+	    for (l = 0; l < 3; l++)
+		printf("%20.10f ", XFixedToDouble (transform->matrix[k][l]));
+	    if (k != 2)
+		printf(";\n%20s", "");
+	}
+	printf("]\n");
+	printf("################################\n");
+    }
 }
 
 static Bool
